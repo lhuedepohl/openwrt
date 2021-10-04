@@ -84,6 +84,13 @@
 			linux,code = <KEY_RESTART>;
 		};
 	};
+
+	gpio-restart {
+		compatible = "gpio-restart";
+		open-source;
+		priority = <255>;
+		gpios = <&gpio1 34 GPIO_ACTIVE_HIGH>;
+	};
 };
 
 &gpio1 {

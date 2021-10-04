@@ -16,6 +16,7 @@
 #include <linux/delay.h>
 #include <linux/of_fdt.h>
 #include <linux/irqchip.h>
+#include <linux/reboot.h>
 
 #include <asm/addrspace.h>
 #include <asm/io.h>
@@ -33,7 +34,14 @@ u32 pll_reset_value;
 
 static void rtl838x_restart(char *command)
 {
-	u32 pll = sw_r32(RTL838X_PLL_CML_CTRL);
+	u32 pll;
+
+	/* Try potentially registered restart handlers,
+         * e.g. a 'gpio-restart' defined in the device tree */
+	pr_info("Trying normal kernel restart\n");
+	do_kernel_restart(command);
+
+	pll = sw_r32(RTL838X_PLL_CML_CTRL);
 
 	pr_info("System restart.\n");
 	pr_info("PLL control register: %x, applying reset value %x\n",
